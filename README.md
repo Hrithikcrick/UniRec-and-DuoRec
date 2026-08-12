@@ -1,3 +1,62 @@
+<!-- HRITHIK_PROJECT_START -->
+
+<div align="center">
+
+# 🚀 UniSRec — Research Extension
+### Cross-Domain Sequential Recommendation on Amazon Reviews 2023
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+![CUDA](https://img.shields.io/badge/CUDA-12.1-76B900?style=for-the-badge&logo=nvidia&logoColor=white)
+
+**Research Extension by Hrithik Sharma**
+
+</div>
+
+---
+
+## 👨‍💻 My Contribution
+
+This repository contains my experimental extension of the original **UniSRec (KDD 2022)** project, focused on sequential recommendation under highly sparse Amazon Reviews 2023 domains.
+
+- Fine-tuned UniSRec on **Magazine Subscriptions** and **Gift Cards**
+- Built preprocessing and **k-core filtering** workflows
+- Generated **PLM-based textual item embeddings**
+- Evaluated performance under approximately **95–98% sparsity**
+- Analyzed **Hit@10, NDCG@K, Recall@K and Precision@K**
+- Extended experiments with **DuoRec** for contrastive sequential recommendation
+
+## 🏆 Key Results
+
+| Model | Dataset | Main Result |
+|---|---|---:|
+| **UniSRec** | Magazine Subscriptions | **Hit@10 = 0.2789, NDCG@10 = 0.1302** |
+| **UniSRec** | Gift Cards | **Hit@10 = 0.2004, NDCG@10 = 0.0993** |
+| **DuoRec** | Magazine Subscriptions | **NDCG@10 = 0.0299** |
+| **DuoRec** | Gift Cards | **Recall@10 = 0.0027, NDCG@10 = 0.0016** |
+
+## 🧠 End-to-End Pipeline
+
+`Amazon Reviews 2023 → Preprocessing → K-Core Filtering → PLM Text Embeddings → Transformer Pretraining → Fine-Tuning → Ranking Evaluation`
+
+## 🛠️ Tech Stack
+
+`Python` • `PyTorch` • `Transformers` • `RecBole` • `CUDA` • `PLM Embeddings`
+
+## 🔗 Attribution
+
+This work is an **experimental research extension** based on the original UniSRec implementation.
+
+**Official upstream repository:** https://github.com/RUCAIBox/UniSRec
+
+**Original paper:** *Towards Universal Sequence Representation Learning for Recommender Systems* — KDD 2022
+
+<!-- HRITHIK_PROJECT_END -->
+
+---
+
+# 📚 Original UniSRec Documentation
+
 # UniSRec
 
 This is the official PyTorch implementation for the [paper](https://arxiv.org/abs/2206.05941):
@@ -30,7 +89,7 @@ pytorch>=1.11.0
 
 ## Download Datasets and Pre-trained Model
 
-Please download the processed downstream (or pre-trained, if needed) datasets and the pre-trained model from [Google Drive](https://drive.google.com/drive/folders/1Uik0fMk4oquV_bS9lXTZuExAYbIDkEMW?usp=sharing) or [百度网盘](https://pan.baidu.com/s/1zdP3tEw9X6Ys5YNO5TyNEQ) (密码 3cml).
+Please download the processed downstream (or pre-trained, if needed) datasets and the pre-trained model from [Google Drive](https://drive.google.com/drive/folders/1Uik0fMk4oquV_bS9lXTZuExAYbIDkEMW?usp=sharing) or [ç™¾åº¦ç½‘ç›˜](https://pan.baidu.com/s/1zdP3tEw9X6Ys5YNO5TyNEQ) (å¯†ç  3cml).
 
 After unzipping, move `pretrain/` and `downstream/` to `dataset/`, and move `UniSRec-FHCKM-300.pth` to `saved/`.
 
