@@ -63,6 +63,41 @@ The milestone describes experiments with high interaction sparsity. Exact user/i
 
 **Result reconciliation note:** The DuoRec Magazine milestone narrative and CV report Recall@10 **0.0362**, while one per-epoch table lists **0.0435** at epoch 12. This README follows the CV/narrative figure; checkpoint-level numbers should be verified against the original logs before making a stronger claim.
 
+### Additional results and training dynamics from the milestone
+
+Beyond the headline CV scores, the **November 2025 milestone report** records training-loss trends, selected evaluation checkpoints and top-K ranking behavior. These are *reported values from the milestone*, not independent reproductions from this repository.
+
+**UniSRec — fine-tuning observations**
+
+| Domain | Reported training-loss trend | Checkpoint / evaluation detail |
+|---|---|---|
+| Magazine Subscriptions | Approximately **75.2 → 60.5** | Around **43 epochs** shown; reported Hit@10 **0.2789**, NDCG@10 **0.1302** |
+| Gift Cards | Approximately **66.2 → 60.2** | Reported best around **epoch 9**: Hit@10 **0.2004**, NDCG@10 **0.0993**; later epochs **29–39** retained Hit@10 **0.2004**, while NDCG@10 was approximately **0.0942** |
+
+These observations show that lower training loss did not necessarily coincide with a better late-checkpoint ranking score. The Gift Cards result in the CV uses the **best reported NDCG@10 (0.0993)**, not the late-stage value.
+
+**DuoRec — checkpoint-level results reported in the milestone**
+
+| Domain | Epoch | Training loss | Recall@10 | NDCG@10 |
+|---|---:|---:|---:|---:|
+| Magazine Subscriptions | 0 | 67.66 | 0.0507 | 0.0328 |
+| Magazine Subscriptions | 5 | 52.29 | 0.0362 | 0.0209 |
+| Magazine Subscriptions | 9 | 51.41 | 0.0362 | 0.0220 |
+| Magazine Subscriptions | 12 | 51.09 | 0.0435 | 0.0299 |
+| Gift Cards | 0 | 822.94 | 0.0000 | 0.0000 |
+| Gift Cards | 5 | 754.73 | 0.0013 | 0.0004 |
+| Gift Cards | 10 | 559.77 | 0.0012 | 0.0012 |
+| Gift Cards | 13 | 450.37 | 0.0027 | 0.0016 |
+| Gift Cards | 20 | 254.69 | 0.0018 | 0.0010 |
+| Gift Cards | 24 | 207.57 | 0.0018 | 0.0010 |
+
+**Interpretation and limitations**
+
+- DuoRec's **Gift Cards** training loss fell substantially through epoch 24, but the reported top-10 metrics were better at **epoch 13** than at epoch 24. This illustrates why early stopping and validation metrics matter in addition to loss.
+- The **Magazine** milestone table lists an epoch-0 NDCG@10 (**0.0328**) higher than its epoch-12 value (**0.0299**), although the narrative describes epoch 12 as the best checkpoint. It also lists epoch-12 Recall@10 (**0.0435**) while the CV/narrative reports **0.0362**. These discrepancies remain **unresolved** without the original split-specific logs; the headline table above deliberately retains the CV's reported figures.
+- Training losses from UniSRec and DuoRec **must not be compared numerically as if they were the same objective**. Model configurations, data preparation and reported evaluation settings differ.
+- The milestone additionally describes a roughly **20% NDCG reduction** when contrastive loss is removed from DuoRec (Magazine), but does not provide a corresponding ablation-results table in the report. That statement is **not included as a verified quantitative result** here.
+
 ## Code in this repository vs. local experiment files
 
 **Included here (UniSRec foundation):**
