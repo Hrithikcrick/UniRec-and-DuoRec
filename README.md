@@ -39,10 +39,10 @@ I used **DuoRec** for sequential recommendation with a **Transformer encoder** a
 
 ## UniSRec — Dataset Statistics
 
-| Dataset | Users | Items | Interactions | Avg. actions / user | Sparsity |
-|---|---:|---:|---:|---:|---:|
-| Magazine Subscriptions | 6182 | 157 | 6328 | 2.97 | 98.10% |
-| Gift Cards | 455–456 | 147 | ~2950 | — | ~97.6% |
+| Dataset | Users | Items | Interactions |
+|---|---:|---:|---:|
+| Magazine Subscriptions | 6,182 | 157 | 6,328 |
+| Gift Cards | 455–456 | 147 | ~2,950 |
 
 ---
 
@@ -106,10 +106,10 @@ xychart-beta
 
 ## DuoRec — Dataset Statistics
 
-| Dataset | Users | Items | Interactions | Avg. actions / user | Sparsity |
-|---|---:|---:|---:|---:|---:|
-| Magazine Subscriptions | 139 | 327 | 22366 | 16.22 | 95.08% |
-| Gift Cards | ~450–460 | ~145–150 | ~2900 | — | >97% |
+| Dataset | Users | Items | Interactions |
+|---|---:|---:|---:|
+| Magazine Subscriptions | 139 | 327 | 22,366 |
+| Gift Cards | ~450–460 | ~145–150 | ~2,900 |
 
 ---
 
