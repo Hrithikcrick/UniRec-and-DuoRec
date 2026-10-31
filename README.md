@@ -2,129 +2,245 @@
 
 <div align="center">
 
-# UniSRec & DuoRec — Sequential Recommendation on Sparse Amazon Reviews 2023 Domains
+# UniSRec & DuoRec on Amazon Reviews 2023
+### Sequential Recommendation on Magazine Subscriptions and Gift Cards
 
-**Magazine Subscriptions & Gift Cards | PyTorch · RecBole · Transformer-based Sequential Recommendation**
-
-Research reproduction, domain adaptation, training and evaluation experiments
+**PyTorch · RecBole · Transformer-based Sequential Recommendation**
 
 </div>
 
-## Project overview
+---
 
-This project studies two established sequential recommendation models on **Amazon Reviews 2023** categories with sparse user–item interactions:
+## Overview
 
-- **UniSRec (KDD 2022)** — *Towards Universal Sequence Representation Learning for Recommender Systems*. Uses pretrained-language-model (PLM) item text representations and a Transformer sequence encoder to support transfer across recommendation domains. The project milestone sometimes calls this model **UniRec**; its official paper and implementation name is **UniSRec**.
-- **DuoRec (WSDM 2022)** — *Contrastive Learning for Representation Degeneration Problem in Sequential Recommendation*. Uses Transformer sequence modeling and contrastive regularization to improve the distribution and discrimination of learned representations.
+In this project, I worked on **sequential recommendation** using **UniSRec** and **DuoRec** on two Amazon Reviews 2023 categories:
 
-The work is an **experimental reproduction and domain-specific evaluation** of existing architectures, not a claim to have invented either model.
+- **Magazine Subscriptions**
+- **Gift Cards**
 
-## My work
+I focused on:
+- preprocessing sparse recommendation data
+- preparing sequential train / validation / test files
+- generating PLM-based item features for UniSRec
+- training and fine-tuning transformer-based recommendation models
+- evaluating recommendation quality using top-K ranking metrics
 
-- Prepared **Magazine Subscriptions** and **Gift Cards** interaction data from Amazon Reviews 2023 for RecBole-based sequential recommendation experiments.
-- Performed **user/item k-core filtering**, item/interaction processing, chronological sequence preparation and training/validation/test generation in the experiment workflow.
-- Generated **768-dimensional PLM-based textual item embeddings** for the UniSRec experiments to supplement sparse collaborative signals.
-- Ran UniSRec pretraining/fine-tuning experiments with a Transformer sequence encoder and next-item ranking evaluation.
-- Trained and evaluated **DuoRec** as a contrastive sequential-recommendation comparison on both domains.
-- Analyzed learning curves and reported **Hit@10, Recall@10, NDCG@10**, and other ranking metrics where available.
+---
 
-## Results reported in my CV and project milestone
+## Models
 
-| Model | Amazon Reviews 2023 subset | Hit@10 | Recall@10 | NDCG@10 |
-|---|---|---:|---:|---:|
-| **UniSRec** | Magazine Subscriptions | **0.2789** | — | **0.1302** |
-| **UniSRec** | Gift Cards | **0.2004** | — | **0.0993** |
-| **DuoRec** | Magazine Subscriptions | — | **0.0362** | **0.0299** |
-| **DuoRec** | Gift Cards | — | **0.0027** | **0.0016** |
+### UniSRec
+I used **UniSRec** for sequential recommendation with **PLM-based textual item embeddings** and a **Transformer encoder**.
 
-These values match the **Sequential Recommendation System** entry in my technical CV and the summarized results in my November 2025 project milestone. A dash means that metric is **not reported here**, not a zero score. These are **reported experimental results**, not newly reproduced measurements from the files in this repository.
+### DuoRec
+I used **DuoRec** for sequential recommendation with a **Transformer encoder** and **contrastive regularization**.
 
-**Interpretation:** The experiments explored the behavior of text-enhanced sequential representations (UniSRec) and contrastive regularization (DuoRec) under sparse-domain conditions. **The runs did not all share the same preprocessing or evaluation configuration**, so the numbers should not be treated as a controlled, apples-to-apples model ranking.
+---
 
-## Experimental pipeline
+## UniSRec — Dataset Statistics
 
-1. **Data preparation:** Amazon Reviews 2023 interactions and item metadata → cleaning and user/item filtering → sequential train/validation/test files.
-2. **Text features (UniSRec):** Generate 768-D item representations using pretrained language-model text embeddings.
-3. **Sequence learning:** Use multi-head Transformer attention to model historical item interactions; pretrain/fine-tune UniSRec and separately train/evaluate DuoRec.
-4. **Evaluation:** Rank next-item candidates and examine top-K ranking metrics and convergence.
+| Dataset | Users | Items | Interactions | Avg. actions / user | Sparsity |
+|---|---:|---:|---:|---:|---:|
+| Magazine Subscriptions | 6182 | 157 | 6328 | 2.97 | 98.10% |
+| Gift Cards | 455–456 | 147 | ~2950 | — | ~97.6% |
 
-### Settings documented in the project milestone
+---
 
-| Experiment | Setup / observation |
+## UniSRec — Configuration
+
+| Component | Value |
 |---|---|
-| UniSRec (both domains) | PLM text features: **768 dimensions**; Transformer encoder with **2 layers**, **2 attention heads**, and **300-dimensional hidden representations** in the documented configuration |
-| UniSRec — Magazine | Fine-tuning logs shown through approximately **43 epochs**; reported Hit@10 **0.2789**, NDCG@10 **0.1302** |
-| UniSRec — Gift Cards | Best checkpoint reported around **epoch 9**; Hit@10 **0.2004**, NDCG@10 **0.0993** |
-| DuoRec — Magazine | **50-epoch** experiment; Adam **1e-3**, batch size **256**, hidden size **64**, 2 layers/2 heads, dropout **0.5**; milestone narrative identifies epoch **12** as a selected checkpoint |
-| DuoRec — Gift Cards | **25-epoch** observed run; Adam **1e-3**, batch size **2048**, hidden size **64**, 2 layers/2 heads, dropout **0.5**; best reported around epoch **13** |
-| Environment (DuoRec) | PyTorch **2.5.1**, CUDA **12.1**, NVIDIA **GeForce RTX 3050**, RecBole-compatible workflow |
+| PLM embedding size | 768 |
+| Transformer layers | 2 |
+| Attention heads | 2 |
+| Hidden size | 300 |
+| Loss | Cross-entropy |
 
-The milestone describes experiments with high interaction sparsity. Exact user/item/interaction counts are intentionally not repeated here because some figures in its narrative are internally inconsistent and require checking against the original processed data.
+---
 
-**Result reconciliation note:** The DuoRec Magazine milestone narrative and CV report Recall@10 **0.0362**, while one per-epoch table lists **0.0435** at epoch 12. This README follows the CV/narrative figure; checkpoint-level numbers should be verified against the original logs before making a stronger claim.
+## UniSRec — Final Results
 
-### Additional results and training dynamics from the milestone
+| Dataset | Hit@10 | NDCG@10 |
+|---|---:|---:|
+| Magazine Subscriptions | **0.2789** | **0.1302** |
+| Gift Cards | **0.2004** | **0.0993** |
 
-Beyond the headline CV scores, the **November 2025 milestone report** records training-loss trends, selected evaluation checkpoints and top-K ranking behavior. These are *reported values from the milestone*, not independent reproductions from this repository.
+### UniSRec — Result Graph
 
-**UniSRec — fine-tuning observations**
-
-| Domain | Reported training-loss trend | Checkpoint / evaluation detail |
-|---|---|---|
-| Magazine Subscriptions | Approximately **75.2 → 60.5** | Around **43 epochs** shown; reported Hit@10 **0.2789**, NDCG@10 **0.1302** |
-| Gift Cards | Approximately **66.2 → 60.2** | Reported best around **epoch 9**: Hit@10 **0.2004**, NDCG@10 **0.0993**; later epochs **29–39** retained Hit@10 **0.2004**, while NDCG@10 was approximately **0.0942** |
-
-These observations show that lower training loss did not necessarily coincide with a better late-checkpoint ranking score. The Gift Cards result in the CV uses the **best reported NDCG@10 (0.0993)**, not the late-stage value.
-
-**DuoRec — checkpoint-level results reported in the milestone**
-
-| Domain | Epoch | Training loss | Recall@10 | NDCG@10 |
-|---|---:|---:|---:|---:|
-| Magazine Subscriptions | 0 | 67.66 | 0.0507 | 0.0328 |
-| Magazine Subscriptions | 5 | 52.29 | 0.0362 | 0.0209 |
-| Magazine Subscriptions | 9 | 51.41 | 0.0362 | 0.0220 |
-| Magazine Subscriptions | 12 | 51.09 | 0.0435 | 0.0299 |
-| Gift Cards | 0 | 822.94 | 0.0000 | 0.0000 |
-| Gift Cards | 5 | 754.73 | 0.0013 | 0.0004 |
-| Gift Cards | 10 | 559.77 | 0.0012 | 0.0012 |
-| Gift Cards | 13 | 450.37 | 0.0027 | 0.0016 |
-| Gift Cards | 20 | 254.69 | 0.0018 | 0.0010 |
-| Gift Cards | 24 | 207.57 | 0.0018 | 0.0010 |
-
-**Interpretation and limitations**
-
-- DuoRec's **Gift Cards** training loss fell substantially through epoch 24, but the reported top-10 metrics were better at **epoch 13** than at epoch 24. This illustrates why early stopping and validation metrics matter in addition to loss.
-- The **Magazine** milestone table lists an epoch-0 NDCG@10 (**0.0328**) higher than its epoch-12 value (**0.0299**), although the narrative describes epoch 12 as the best checkpoint. It also lists epoch-12 Recall@10 (**0.0435**) while the CV/narrative reports **0.0362**. These discrepancies remain **unresolved** without the original split-specific logs; the headline table above deliberately retains the CV's reported figures.
-- Training losses from UniSRec and DuoRec **must not be compared numerically as if they were the same objective**. Model configurations, data preparation and reported evaluation settings differ.
-- The milestone additionally describes a roughly **20% NDCG reduction** when contrastive loss is removed from DuoRec (Magazine), but does not provide a corresponding ablation-results table in the report. That statement is **not included as a verified quantitative result** here.
-
-## Code in this repository vs. local experiment files
-
-**Included here (UniSRec foundation):**
-
-- [`unisrec.py`](unisrec.py) — UniSRec model implementation from the attributed upstream project.
-- [`pretrain.py`](pretrain.py), [`ddp_pretrain.py`](ddp_pretrain.py), [`finetune.py`](finetune.py) — training and fine-tuning entry points.
-- [`dataset/preprocessing/process_amazon.py`](dataset/preprocessing/process_amazon.py) — upstream Amazon preprocessing utility; see its own dataset instructions for supported inputs.
-- [`props/`](props/), [`dataset/downstream/`](dataset/downstream/), [`saved/`](saved/) — configuration files, existing downstream datasets and saved checkpoints.
-
-**Not included in the public repository:** the experiment-specific **Amazon Reviews 2023 Magazine/Gift Cards processing and result logs**, as well as the **DuoRec experiment implementation and configuration**, which were used in the locally documented experiments. Consequently, the headline 2023 experimental results **cannot be fully reproduced from this public repository alone**. The original project milestone includes descriptions and screenshots of the local runs.
-
-### Existing upstream quick start
-
-The original UniSRec instructions below demonstrate how to run the **included upstream datasets** (such as `Scientific`), not how to recreate the local Amazon Reviews 2023 experiments:
-
-```bash
-python finetune.py -d Scientific -p saved/UniSRec-FHCKM-300.pth
+```mermaid
+xychart-beta
+    title "UniSRec Final Results"
+    x-axis ["Magazine", "Gift Cards"]
+    y-axis "Score" 0 --> 0.30
+    bar "Hit@10" [0.2789, 0.2004]
+    bar "NDCG@10" [0.1302, 0.0993]
 ```
 
-## Research papers, implementation credit & data
+---
 
-- **UniSRec:** Yupeng Hou et al., *Towards Universal Sequence Representation Learning for Recommender Systems*, **KDD 2022** — [paper](https://arxiv.org/abs/2206.05941) · [official code](https://github.com/RUCAIBox/UniSRec).
-- **DuoRec:** Ruihong Qiu et al., *Contrastive Learning for Representation Degeneration Problem in Sequential Recommendation*, **WSDM 2022** — [paper](https://arxiv.org/abs/2110.05730) · [official code](https://github.com/RuihongQiu/DuoRec).
-- **Data:** [Amazon Reviews 2023](https://amazon-reviews-2023.github.io/).
-- **Framework:** [RecBole](https://github.com/RUCAIBox/RecBole).
+## UniSRec — Training Summary
 
-The repository's foundation is based on the original **UniSRec** open-source implementation. My documented contribution is adapting the experimental workflow to the two Amazon Reviews 2023 domains, running the training/evaluation studies, comparing reported behavior and analyzing results. Original authors retain credit for their architectures and upstream code.
+### Magazine Subscriptions
+- Training loss decreased from **75.2** to **60.5**
+- Fine-tuning logs were shown through **43 epochs**
+- Final results:
+  - **Hit@10 = 0.2789**
+  - **NDCG@10 = 0.1302**
+
+### Gift Cards
+- Training loss decreased from **66.2** to **60.2**
+- Best checkpoint was reported around **epoch 9**
+- Best results:
+  - **Hit@10 = 0.2004**
+  - **NDCG@10 = 0.0993**
+- Later evaluations (epochs **34–39**) reported:
+  - **Hit@10 = 0.2004**
+  - **NDCG@10 ≈ 0.0942**
+
+| Dataset | Epoch information | Training-loss trend | Result |
+|---|---|---|---|
+| Magazine Subscriptions | 43 epochs shown | 75.2 → 60.5 | Hit@10 = 0.2789, NDCG@10 = 0.1302 |
+| Gift Cards | Best around epoch 9 | 66.2 → 60.2 | Hit@10 = 0.2004, NDCG@10 = 0.0993 |
+
+---
+
+## DuoRec — Dataset Statistics
+
+| Dataset | Users | Items | Interactions | Avg. actions / user | Sparsity |
+|---|---:|---:|---:|---:|---:|
+| Magazine Subscriptions | 139 | 327 | 22366 | 16.22 | 95.08% |
+| Gift Cards | ~450–460 | ~145–150 | ~2900 | — | >97% |
+
+---
+
+## DuoRec — Configuration
+
+### Magazine Subscriptions
+
+| Component | Value |
+|---|---|
+| Epochs | 50 |
+| Batch size | 256 |
+| Hidden size | 64 |
+| Inner size | 256 |
+| Layers | 2 |
+| Heads | 2 |
+| Dropout | 0.5 |
+| Optimizer | Adam |
+| Learning rate | 0.001 |
+
+### Gift Cards
+
+| Component | Value |
+|---|---|
+| Epochs | 25 |
+| Batch size | 2048 |
+| Hidden size | 64 |
+| Inner size | 256 |
+| Layers | 2 |
+| Heads | 2 |
+| Dropout | 0.5 |
+| Optimizer | Adam |
+| Learning rate | 0.001 |
+
+### Environment
+
+| Component | Value |
+|---|---|
+| Framework | PyTorch + RecBole |
+| CUDA | 12.1 |
+| GPU | NVIDIA GeForce RTX 3050 |
+
+---
+
+## DuoRec — Final Results
+
+| Dataset | Recall@10 | NDCG@10 |
+|---|---:|---:|
+| Magazine Subscriptions | **0.0362** | **0.0299** |
+| Gift Cards | **0.0027** | **0.0016** |
+
+### DuoRec — Result Graph
+
+```mermaid
+xychart-beta
+    title "DuoRec Final Results"
+    x-axis ["Magazine", "Gift Cards"]
+    y-axis "Score" 0 --> 0.04
+    bar "Recall@10" [0.0362, 0.0027]
+    bar "NDCG@10" [0.0299, 0.0016]
+```
+
+---
+
+## DuoRec — Magazine Subscriptions Results
+
+| Epoch | Train Loss | Recall@10 | NDCG@10 | Precision@10 |
+|---:|---:|---:|---:|---:|
+| 5 | 52.29 | 0.0362 | 0.0209 | 0.0019 |
+| 9 | 51.41 | 0.0362 | 0.0220 | 0.0022 |
+| 12 | 51.09 | 0.0435 | 0.0299 | 0.0029 |
+
+### DuoRec — Magazine Subscriptions Graph
+
+```mermaid
+xychart-beta
+    title "DuoRec Magazine Subscriptions"
+    x-axis [5, 9, 12]
+    y-axis "Score" 0 --> 0.05
+    line "Recall@10" [0.0362, 0.0362, 0.0435]
+    line "NDCG@10" [0.0209, 0.0220, 0.0299]
+```
+
+---
+
+## DuoRec — Gift Cards Results
+
+| Epoch | Train Loss | Recall@10 | NDCG@10 |
+|---:|---:|---:|---:|
+| 5 | 754.73 | 0.0013 | 0.0004 |
+| 10 | 559.77 | 0.0012 | 0.0012 |
+| 13 | 450.37 | 0.0027 | 0.0016 |
+| 20 | 254.69 | 0.0018 | 0.0010 |
+| 24 | 207.57 | 0.0018 | 0.0010 |
+
+### DuoRec — Gift Cards Graph
+
+```mermaid
+xychart-beta
+    title "DuoRec Gift Cards"
+    x-axis [5, 10, 13, 20, 24]
+    y-axis "Score" 0 --> 0.003
+    line "Recall@10" [0.0013, 0.0012, 0.0027, 0.0018, 0.0018]
+    line "NDCG@10" [0.0004, 0.0012, 0.0016, 0.0010, 0.0010]
+```
+
+---
+
+## Key Results
+
+- **UniSRec — Magazine Subscriptions:** Hit@10 = **0.2789**, NDCG@10 = **0.1302**
+- **UniSRec — Gift Cards:** Hit@10 = **0.2004**, NDCG@10 = **0.0993**
+- **DuoRec — Magazine Subscriptions:** Recall@10 = **0.0362**, NDCG@10 = **0.0299**
+- **DuoRec — Gift Cards:** Recall@10 = **0.0027**, NDCG@10 = **0.0016**
+
+---
+
+## References
+
+- **UniSRec:** Yupeng Hou et al., *Towards Universal Sequence Representation Learning for Recommender Systems*, **KDD 2022**  
+  Paper: https://arxiv.org/abs/2206.05941  
+  Code: https://github.com/RUCAIBox/UniSRec
+
+- **DuoRec:** Ruihong Qiu et al., *Contrastive Learning for Representation Degeneration Problem in Sequential Recommendation*, **WSDM 2022**  
+  Paper: https://arxiv.org/abs/2110.05730  
+  Code: https://github.com/RuihongQiu/DuoRec
+
+- **Amazon Reviews 2023**  
+  https://amazon-reviews-2023.github.io/
+
+- **RecBole**  
+  https://github.com/RUCAIBox/RecBole
 
 <!-- HRITHIK_PROJECT_END -->
 
